@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.users.apps.UsersConfig',
+    #'apps.users.apps.UsersConfig',
     'DjangoUeditor',
-    # 'users',
+    'users.apps.UsersConfig',
     'goods.apps.GoodsConfig',
     'trade.apps.TradeConfig',
     'user_aperation.apps.UserAperationConfig',
@@ -52,7 +52,9 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'xadmin',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework.authtoken'
+    #'apps.EShop',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +137,10 @@ USE_L10N = True
 
 USE_TZ = False  # 默认为True,时间是utc时间， 本地时间设置为FALSE
 
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
@@ -142,3 +148,24 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    )
+}
+
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA' : datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX' : 'JWT',
+}
+
+# 手机号码正则表达式
+REGEX_MOBILE = '^1[358]\d{9}%|^147\d{8}$|^176\d{8}$'
+
+# 云片网key
+APIKEY = '864a95725df2966de2ad8172970fc6bc'

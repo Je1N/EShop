@@ -7,6 +7,7 @@ from rest_framework import generics
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.authentication import TokenAuthentication
 
 from rest_framework import viewsets
 
@@ -27,13 +28,14 @@ class GoodsPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     """
     所有商品列表,分页，搜索，过滤，排序
     """
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
+    # authentication_classes = (TokenAuthentication, )
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     # filter_fields = ('name', 'shop_price')
     filter_class = GoodsFileter
